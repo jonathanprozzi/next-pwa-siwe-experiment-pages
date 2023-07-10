@@ -1,5 +1,8 @@
 import '../styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
+import { Session } from 'next-auth';
+import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
+import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import {
   RainbowKitProvider,
@@ -72,9 +75,13 @@ const wagmiConfig = createConfig({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider appInfo={appInfo} chains={chains}>
-        <Component {...pageProps} />
-      </RainbowKitProvider>
+      <SessionProvider session={pageProps.session} refetchInterval={0}>
+        <RainbowKitSiweNextAuthProvider>
+          <RainbowKitProvider appInfo={appInfo} chains={chains}>
+            <Component {...pageProps} />
+          </RainbowKitProvider>
+        </RainbowKitSiweNextAuthProvider>
+      </SessionProvider>
     </WagmiConfig>
   );
 }
